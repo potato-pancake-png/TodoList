@@ -2,7 +2,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Editor from "./components/Editor";
 import List from "./components/List";
-import { useState, useRef, useReducer } from "react";
+import { useRef, useReducer, useCallback } from "react";
 
 const mockData = [
   {
@@ -47,7 +47,7 @@ function App() {
   const [todos, dispatch] = useReducer(reducer, mockData);
   const idRef = useRef(3);
 
-  const onCreate = (content) => {
+  const onCreate = useCallback((content) => {
     dispatch({
       type: "CREATE",
       data: {
@@ -57,22 +57,21 @@ function App() {
         date: new Date().getTime(),
       },
     });
-  };
+  }, []);
 
-  const onUpdate = (targetID) => {
+  const onUpdate = useCallback((targetID) => {
     dispatch({
       type: "UPDATE",
       targetId: targetID,
     });
-  };
+  }, []);
 
-  const onDelete = (targetID) => {
-    idRef.current--;
+  const onDelete = useCallback((targetID) => {
     dispatch({
       type: "DELETE",
       targetId: targetID,
     });
-  };
+  }, []);
 
   return (
     <div className="App">
